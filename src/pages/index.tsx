@@ -9,6 +9,8 @@ import { NoteEditor } from "../components/NoteEditor";
 import { NoteCard } from "~/components/NoteCard";
 
 const Home: NextPage = () => {
+  const { data: sessionData } = useSession();
+
   return (
     <>
       <Head>
@@ -18,7 +20,11 @@ const Home: NextPage = () => {
       </Head>
       <main>
         <Header />
-        <Content />
+        {sessionData?.user.id ? (
+          <Content />
+        ) : (
+          <div className="w-full justify-center">Please login</div>
+        )}
       </main>
     </>
   );
@@ -71,7 +77,7 @@ const Content: React.FC = () => {
   });
 
   return (
-    <div className="mx-5 mt-5 grid grid-cols-4 gap-2">
+    <div className="mx-5 mt-5 grid w-full grid-cols-4 gap-2">
       <div className="px-2">
         <ul className="menu rounded-box w-56 bg-base-100 p-2">
           {topics?.map((topic) => (
