@@ -12,24 +12,88 @@ export const NoteCard = ({
   note: Note;
   onDelete: () => void;
 }) => {
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className="card mt-5 border border-gray-200 bg-base-100 shadow-xl">
       <div className="m-0 p-3">
-        <div
-          className={`collapse-arrow ${
-            isExpanded ? "collapse-open" : ""
-          } collapse`}
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <div className="collapse-title text-xl font-bold">{note.title}</div>
-          <div className="collapse-content">
-            <div className="prose lg:prose-xl">
-              <ReactMarkdown>{note.content}</ReactMarkdown>
+        <div>
+          <div
+            className={`collapse-arrow cursor-pointer ${
+              isExpanded || showDeleteAlert ? "collapse-open" : ""
+            } collapse`}
+            onClick={() => {
+              if (showDeleteAlert) {
+                return;
+              }
+              setIsExpanded(!isExpanded);
+            }}
+          >
+            <div className="collapse-title text-xl font-bold">{note.title}</div>
+            <div className="collapse-content">
+              {isExpanded && (
+                <div className="prose lg:prose-xl">
+                  <ReactMarkdown>{note.content}</ReactMarkdown>
+                </div>
+              )}
             </div>
-            <div className="btn-warning btn-xs btn px-5" onClick={onDelete}>
+          </div>
+          {!showDeleteAlert && isExpanded && (
+            <div
+              className="btn-warning btn-xs btn ml-3 mb-3 px-5"
+              onClick={(e) => {
+                setShowDeleteAlert(true);
+                setIsExpanded(true);
+              }}
+            >
               Delete
             </div>
+          )}
+          <div>
+            {showDeleteAlert && (
+              <div className="alert alert-warning shadow-lg">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 flex-shrink-0 stroke-current"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                  <span>
+                    Warning! Are you sure you want to Delete this note?
+                  </span>
+                </div>
+                <div className="flex-none">
+                  <button
+                    className="btn-primary btn-sm btn z-50"
+                    onClick={(e) => {
+                      setShowDeleteAlert(!showDeleteAlert);
+                      setIsExpanded(false);
+                    }}
+                  >
+                    Do Not Delete
+                  </button>
+                  <button
+                    className="btn-ghost btn-sm btn z-50"
+                    onClick={(e) => {
+                      onDelete();
+                      setShowDeleteAlert(!showDeleteAlert);
+                      setIsExpanded(false);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
