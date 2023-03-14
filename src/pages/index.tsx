@@ -23,7 +23,9 @@ const Home: NextPage = () => {
         {sessionData?.user.id ? (
           <Content />
         ) : (
-          <div className="w-full justify-center">Please login</div>
+          <div className="flex h-screen">
+            <div className="m-auto">Please login</div>
+          </div>
         )}
       </main>
     </>
@@ -50,8 +52,9 @@ const Content: React.FC = () => {
   );
 
   const createTopic = api.topic.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (topic) => {
       void refetchTopics();
+      setSelectedTopic(topic);
     },
   });
 
@@ -77,8 +80,8 @@ const Content: React.FC = () => {
   });
 
   return (
-    <div className="mx-5 mt-5 grid w-full grid-cols-4 gap-2">
-      <div className="px-2">
+    <div className="mx-5 mt-5 grid gap-2 sm:grid-rows-2 lg:grid-cols-4">
+      <div className="colspan-1 px-2">
         <ul className="menu rounded-box w-56 bg-base-100 p-2">
           {topics?.map((topic) => (
             <li key={topic.id}>
