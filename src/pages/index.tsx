@@ -40,6 +40,8 @@ const Content: React.FC = () => {
   const { data: sessionData } = useSession();
 
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [pendingDeleteNoteId, setPendingDeleteNoteId] = useState("");
 
   const { data: topics, refetch: refetchTopics } = api.topic.getAll.useQuery(
     undefined, // no input
@@ -73,8 +75,14 @@ const Content: React.FC = () => {
     },
   });
 
-  const deleteNote = api.note.delete.useMutation({
+  const deleteNote = (id: string) => {
+    setPendingDeleteNoteId(id);
+    setShowDeleteAlert(true);
+  };
+
+  const deleteNoteAccepted = api.note.delete.useMutation({
     onSuccess: () => {
+      setPendingDeleteNoteId("");
       void refetchNotes();
     },
   });
@@ -119,11 +127,49 @@ const Content: React.FC = () => {
             <NoteCard
               note={note}
               onDelete={function (): void {
-                void deleteNote.mutate({ id: note.id });
+                void deleteNote(note.id);
               }}
             />
+            {showDeleteAlert && pendingDeleteNoteId === note.id ? (
+              <div className="alert alert-warning shadow-lg">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="h-6 w-6 flex-shrink-0 stroke-info"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  <span>Are you sure you want to Delete this note?</span>
+                </div>
+                <div className="flex-none">
+                  <button
+                    className="btn-ghost btn-sm btn"
+                    onClick={() => setShowDeleteAlert(!showDeleteAlert)}
+                  >
+                    Deny
+                  </button>
+                  <button
+                    className="btn-primary btn-sm btn"
+                    onClick={() => {
+                      setShowDeleteAlert(!showDeleteAlert);
+                      deleteNoteAccepted.mutate({ id: pendingDeleteNoteId });
+                    }}
+                  >
+                    Accept
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </div>
         ))}
+
         <NoteEditor
           onSave={({ title, content }) => {
             void createNote.mutate({
