@@ -40,7 +40,7 @@ export default function Header() {
   return (
     <div className="navbar bg-primary text-primary-content">
       <div className="flex-1 pl-5 text-3xl font-bold">
-        {sessionData?.user?.name ? `Jots for ${sessionData.user.name}` : ""}
+        {sessionData?.user?.name ? `${sessionData.user.name}'s jots` : ""}
       </div>
       <div className="flex-none gap-2">
         <div className="dropdown-end dropdown grid grid-cols-2">
