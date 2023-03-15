@@ -11,7 +11,7 @@ export const NoteEditor = ({
   note,
 }: {
   onSave: (note: { title: string; content: string }) => void;
-  note: Note | null;
+  note?: Note | null;
 }) => {
   const [code, setCode] = useState<string>("");
   const [title, setTitle] = useState<string>("");
