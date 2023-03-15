@@ -1,16 +1,24 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import type { RouterOutputs } from "~/utils/api";
+type Note = RouterOutputs["note"]["getAll"][0];
 
 export const NoteEditor = ({
   onSave,
+  note,
 }: {
   onSave: (note: { title: string; content: string }) => void;
+  note: Note | null;
 }) => {
   const [code, setCode] = useState<string>("");
   const [title, setTitle] = useState<string>("");
+  useEffect(() => {
+    setTitle(note?.title || "");
+    setCode(note?.content || "");
+  }, [note]);
 
   return (
     <div className="card mt-5 border border-gray-200 bg-base-100 shadow-xl">
@@ -40,14 +48,17 @@ export const NoteEditor = ({
       <div className="card-actions m-7 mt-0 justify-end">
         <button
           onClick={() => {
+            if (!title || !code) {
+              return;
+            }
             onSave({ title, content: code });
-            setCode("");
             setTitle("");
+            setCode("");
           }}
           className="primary-btn btn"
-          disabled={title.trim().length === 0 || code.length === 0}
+          disabled={title?.trim().length === 0 || code?.length === 0}
         >
-          Save
+          {note ? "Update" : "Save"}
         </button>
       </div>
     </div>

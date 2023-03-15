@@ -35,11 +35,13 @@ const Home: NextPage = () => {
 export default Home;
 
 type Topic = RouterOutputs["topic"]["getAll"][0];
+type Note = RouterOutputs["note"]["getAll"][0];
 
 const Content: React.FC = () => {
   const { data: sessionData } = useSession();
 
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
   const { data: topics, refetch: refetchTopics } = api.topic.getAll.useQuery(
     undefined, // no input
@@ -74,6 +76,12 @@ const Content: React.FC = () => {
   });
 
   const deleteNote = api.note.delete.useMutation({
+    onSuccess: () => {
+      void refetchNotes();
+    },
+  });
+
+  const updateNote = api.note.update.useMutation({
     onSuccess: () => {
       void refetchNotes();
     },
@@ -121,10 +129,14 @@ const Content: React.FC = () => {
               onDelete={function (): void {
                 void deleteNote.mutate({ id: note.id });
               }}
+              onUpdate={function (title: string, content: string): void {
+                void updateNote.mutate({ id: note.id, title, content });
+              }}
             />
           </div>
         ))}
         <NoteEditor
+          note={selectedNote}
           onSave={({ title, content }) => {
             void createNote.mutate({
               title,

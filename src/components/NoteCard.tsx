@@ -2,17 +2,21 @@ import { useState } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 import type { RouterOutputs } from "~/utils/api";
+import { NoteEditor } from "./NoteEditor";
 
 type Note = RouterOutputs["note"]["getAll"][0];
 
 export const NoteCard = ({
   note,
   onDelete,
+  onUpdate,
 }: {
   note: Note;
   onDelete: () => void;
+  onUpdate: (title: string, content: string) => void;
 }) => {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -28,17 +32,35 @@ export const NoteCard = ({
                 return;
               }
               setIsExpanded(!isExpanded);
+              setIsEditorOpen(isEditorOpen && false);
             }}
           >
             <div className="collapse-title text-xl font-bold">{note.title}</div>
             <div className="collapse-content">
               {isExpanded && (
-                <div className="prose lg:prose-xl">
-                  <ReactMarkdown>{note.content}</ReactMarkdown>
-                </div>
+                <>
+                  <div className="prose lg:prose-xl">
+                    <ReactMarkdown>{note.content}</ReactMarkdown>
+                  </div>
+                </>
               )}
             </div>
           </div>
+          {isExpanded && isEditorOpen && (
+            <div className="m-10 mt-0">
+              <NoteEditor
+                note={note}
+                onSave={({ title, content }) => {
+                  const data = {
+                    title,
+                    content,
+                  };
+                  void onUpdate(title, content);
+                  setIsEditorOpen(false);
+                }}
+              />
+            </div>
+          )}
           {!showDeleteAlert && isExpanded && (
             <div
               className="btn-warning btn-xs btn ml-3 mb-3 px-5"
@@ -48,6 +70,17 @@ export const NoteCard = ({
               }}
             >
               Delete
+            </div>
+          )}
+          {!isEditorOpen && isExpanded && (
+            <div
+              className="btn-warning btn-xs btn ml-3 mb-3 px-5"
+              onClick={(e) => {
+                setIsEditorOpen(true);
+                setIsExpanded(true);
+              }}
+            >
+              Edit
             </div>
           )}
           <div>
