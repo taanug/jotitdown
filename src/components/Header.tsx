@@ -50,7 +50,9 @@ export default function Header() {
           >
             <option value="">Default</option>
             {themes.map((theme) => (
-              <option value={theme}>{theme}</option>
+              <option key={theme} value={theme}>
+                {theme}
+              </option>
             ))}
           </select>
           {sessionData?.user ? (
