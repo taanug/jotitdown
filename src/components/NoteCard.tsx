@@ -20,7 +20,7 @@ export const NoteCard = ({
 
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div className="card mt-5 border border-gray-200 bg-base-100 shadow-xl">
+    <div className="card border border-gray-200 bg-base-100 shadow-xl">
       <div className="m-0 p-3">
         <div>
           <div
@@ -47,9 +47,11 @@ export const NoteCard = ({
             </div>
           </div>
           {isExpanded && isEditorOpen && (
-            <div className="m-10 mt-0">
+            <div className="mb-10 mt-0">
               <NoteEditor
+                topicTitle=""
                 note={note}
+                onCancel={() => setIsEditorOpen(false)}
                 onSave={({ title, content }) => {
                   const data = {
                     title,
