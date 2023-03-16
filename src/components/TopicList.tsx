@@ -59,7 +59,10 @@ const TopicList = ({
         className="input-bordered input input-sm w-full"
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === "Tab") {
-            if (!e.currentTarget.value) {
+            const topicExists = topics?.find(
+              (topic) => topic.title === e.currentTarget.value
+            );
+            if (!e.currentTarget.value || topicExists) {
               return;
             }
             onCreateTopic(e.currentTarget.value);
