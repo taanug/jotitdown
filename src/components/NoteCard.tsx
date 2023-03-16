@@ -53,10 +53,6 @@ export const NoteCard = ({
                 note={note}
                 onCancel={() => setIsEditorOpen(false)}
                 onSave={({ title, content }) => {
-                  const data = {
-                    title,
-                    content,
-                  };
                   void onUpdate(title, content);
                   setIsEditorOpen(false);
                 }}
@@ -67,7 +63,7 @@ export const NoteCard = ({
             {!isEditorOpen && !isDeleteAlertOpen && isExpanded && (
               <div
                 className="btn-primary btn-xs btn m-auto ml-3 mb-3 px-5"
-                onClick={(e) => {
+                onClick={() => {
                   setIsEditorOpen(true);
                   setIsExpanded(true);
                 }}
@@ -77,7 +73,7 @@ export const NoteCard = ({
             )}
             {!isDeleteAlertOpen && isExpanded && (
               <svg
-                onClick={(e) => {
+                onClick={() => {
                   setIsDeleteAlertOpen(true);
                   setIsExpanded(true);
                 }}
@@ -120,7 +116,7 @@ export const NoteCard = ({
                 <div className="flex-none">
                   <button
                     className="btn-primary btn-sm btn z-50"
-                    onClick={(e) => {
+                    onClick={() => {
                       setIsDeleteAlertOpen(!isDeleteAlertOpen);
                       setIsExpanded(false);
                     }}
@@ -129,7 +125,7 @@ export const NoteCard = ({
                   </button>
                   <button
                     className="btn-ghost btn-sm btn z-50"
-                    onClick={(e) => {
+                    onClick={() => {
                       onDelete();
                       setIsDeleteAlertOpen(!isDeleteAlertOpen);
                       setIsExpanded(false);

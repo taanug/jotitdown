@@ -30,7 +30,7 @@ const TopicList = ({
             >
               {topic.title}
               <svg
-                onClick={(e) => {
+                onClick={() => {
                   onDeleteTopic(topic.id);
                 }}
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@ const TopicList = ({
                 strokeWidth={1.5}
                 stroke="currentColor"
                 className={`${
-                  selectedTopic?.id !== topic?.id && "hidden"
+                  selectedTopic?.id !== topic?.id ? "hidden" : ""
                 } ml-auto h-6 w-6 cursor-pointer`}
               >
                 <path
