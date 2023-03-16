@@ -9,9 +9,13 @@ type Note = RouterOutputs["note"]["getAll"][0];
 export const NoteEditor = ({
   onSave,
   note,
+  topicTitle,
+  onCancel,
 }: {
   onSave: (note: { title: string; content: string }) => void;
   note?: Note | null;
+  topicTitle: string;
+  onCancel?: () => void;
 }) => {
   const [code, setCode] = useState<string>("");
   const [title, setTitle] = useState<string>("");
@@ -23,6 +27,7 @@ export const NoteEditor = ({
   return (
     <div className="card mt-5 border border-gray-200 bg-base-100 shadow-xl">
       <div className="card-body">
+        {topicTitle && `Add a new note to the ${topicTitle} topic.`}
         <h2 className="card-title">
           <input
             type="text"
@@ -46,6 +51,11 @@ export const NoteEditor = ({
         />
       </div>
       <div className="card-actions m-7 mt-0 justify-end">
+        {onCancel && (
+          <button onClick={onCancel} className="btn-secondary btn">
+            Cancel
+          </button>
+        )}
         <button
           onClick={() => {
             if (!title || !code) {
