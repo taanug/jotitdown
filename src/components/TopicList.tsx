@@ -9,7 +9,7 @@ const TopicList = ({
   onCreateTopic,
   onDeleteTopic,
 }: {
-  topics: Topic[] | null;
+  topics: Topic[] | undefined;
   selectedTopic: Topic | null;
   setSelectedTopic: (topic: Topic) => void;
   onCreateTopic: (topic: string) => void;

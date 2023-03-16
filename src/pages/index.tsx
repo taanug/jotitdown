@@ -36,7 +36,6 @@ const Home: NextPage = () => {
 export default Home;
 
 type Topic = RouterOutputs["topic"]["getAll"][0];
-type Note = RouterOutputs["note"]["getAll"][0];
 
 const Content: React.FC = () => {
   const { data: sessionData } = useSession();
