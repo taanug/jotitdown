@@ -48,7 +48,7 @@ const Content: React.FC = () => {
       enabled: sessionData?.user !== undefined,
       onSuccess: (data) => {
         console.log("topic", data[0], selectedTopic);
-        setSelectedTopic(data[0] ?? null);
+        setSelectedTopic(selectedTopic ?? data[0] ?? null);
       },
     }
   );
@@ -74,25 +74,27 @@ const Content: React.FC = () => {
     },
   });
 
+  const createTopic = api.topic.create.useMutation({
+    onSuccess: (topic) => {
+      void refetchTopics();
+      void setSelectedTopic(topic);
+    },
+  });
+
   const onCreateTopic = (topic: string) => {
-    const createTopic = api.topic.create.useMutation({
-      onSuccess: (topic) => {
-        void refetchTopics();
-        setSelectedTopic(topic);
-      },
-    });
-    createTopic.mutate({
+    void createTopic.mutate({
       title: topic,
     });
   };
 
+  const deleteTopic = api.topic.delete.useMutation({
+    onSuccess: () => {
+      void refetchTopics();
+      void refetchNotes();
+    },
+  });
+
   const onDeleteTopic = (topicId: string) => {
-    const deleteTopic = api.topic.delete.useMutation({
-      onSuccess: () => {
-        void refetchTopics();
-        void refetchNotes();
-      },
-    });
     void deleteTopic.mutate({ id: topicId });
   };
 
