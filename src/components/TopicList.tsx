@@ -58,7 +58,7 @@ const TopicList = ({
         placeholder="New Topic"
         className="input-bordered input input-sm w-full"
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === "Enter" || e.key === "Tab") {
             onCreateTopic(e.currentTarget.value);
             e.currentTarget.value = "";
           }
