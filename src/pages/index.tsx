@@ -47,12 +47,10 @@ const Content: React.FC = () => {
     {
       enabled: sessionData?.user !== undefined,
       onSuccess: (data) => {
-        console.log("topic", data[0], selectedTopic);
         setSelectedTopic(selectedTopic ?? data[0] ?? null);
       },
     }
   );
-
   const { data: notes, refetch: refetchNotes } = api.note.getAll.useQuery(
     {
       topicId: selectedTopic?.id ?? "",
@@ -89,6 +87,7 @@ const Content: React.FC = () => {
 
   const deleteTopic = api.topic.delete.useMutation({
     onSuccess: () => {
+      setSelectedTopic(null);
       void refetchTopics();
       void refetchNotes();
     },
@@ -131,7 +130,7 @@ const Content: React.FC = () => {
         ))}
         {topics && topics[0] && selectedTopic ? (
           <NoteEditor
-            topicTitle={selectedTopic.title}
+            topicTitle={selectedTopic?.title}
             onSave={({ title, content }) => {
               void createNote.mutate({
                 title,
